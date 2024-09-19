@@ -1,0 +1,109 @@
+stages:
+  - prepare
+  - build
+  - test
+  - semantic-release
+  - deploy
+
+variables:
+  GIT_DEPTH: 0
+  IMAGE_VAR: "gcc:13.3.0"
+  NEXUS_PASS: ${NEXUS_PASSWORD}
+
+
+
+prepare:
+  tags: 
+    - linux/x86_64/docker
+  image: $IMAGE_VAR
+  stage: prepare
+  script:
+    - git clone https://kds4wexp.gitlab.yandexcloud.net/Dmitry_Belov/test_project.git -b test test_branch
+  artifacts:
+    paths:
+      - "test_branch/"
+    expire_in: 1 hour    
+
+
+
+build_gcc:
+  tags: 
+    - linux/x86_64/docker
+  stage: build
+  dependencies: 
+    - prepare
+  image: ${IMAGE_VAR}  # $SOME_IMAGE
+  script:
+    - apt update
+    - apt install pipx -y #закинуть в образ
+    - pipx install conan #закинуть в образ
+    - pipx ensurepath
+  #  - /root/.local/bin/conan build . -s build_type=${BUILD_TYPE} -c tools.build:skip_test=False -pr:a=./conan-profile/profile-release-gcc-13-x86_64 --build="*"
+    - /root/.local/bin/conan build ./test_branch/ -s build_type=${BUILD_TYPE} -c tools.build:skip_test=False -pr:a=./ci-src/conan-profile/profile-release-gcc-13-x86_64 --build="*"
+  parallel:
+    matrix:
+      - BUILD_TYPE: ['Release', 'Debug']
+        PROFILE_V: ['13.3']
+  artifacts:
+    paths:
+    #  - "./build/${BUILD_TYPE}/Test"
+    #  - "./build/${BUILD_TYPE}/Main"
+    - "./test_branch/build/${BUILD_TYPE}/Test"
+    - "./test_branch/build/${BUILD_TYPE}/Main"     
+    expire_in: 1 hour
+
+
+
+test:
+  tags: 
+    - linux/x86_64/docker
+  stage: test
+  dependencies: 
+    - build_gcc
+  script:
+    - pwd
+    - ls
+    - ls ./test_branch/build/
+  #  - ./build/${BUILD_TYPE}/Test/test
+    - ./test_branch/build/${BUILD_TYPE}/Test/test
+  parallel:
+    matrix:
+      - BUILD_TYPE: ['Release', 'Debug']
+
+
+
+semantic-release:
+  tags:
+    - linux/x86_64/docker
+  stage: semantic-release
+  only:
+    refs:
+      # Release branch
+      - main
+      # Pre-release branch
+      - dev
+  script:
+    - npm install --save-dev semantic-release @semantic-release/git @semantic-release/gitlab @semantic-release/exec @semantic-release/changelog
+    - npx semantic-release
+
+
+
+deploy:
+  tags: 
+    - linux/x86_64/docker
+  stage: deploy
+  only:
+    refs:
+      # Release branch
+      - main
+  dependencies: 
+    - build_gcc
+  script:
+    - apt update
+    - apt install curl -y #закинуть в образ
+    #- mv ./test_branch/build/$BUILD_TYPE/Main/main ./test_branch/build/$BUILD_TYPE/Main/$IMAGE_NAME__$PROGRAM_NAME_$VERSION_$BUILD_TYPE
+    - curl -v -u admin:$NEXUS_PASS --upload-file ./test_branch/build/$BUILD_TYPE/Main/main ${NEXUS_URL}/${NEXUS_REPO}/${IMAGE_VAR}__main_${BUILD_TYPE}
+  parallel:
+    matrix:
+      - BUILD_TYPE: ['Release', 'Debug']
+

@@ -1,0 +1,81 @@
+stages:
+  - build
+  - test
+  - semantic-release
+  - deploy
+
+variables:
+  GIT_DEPTH: 0
+  IMAGE_VAR: "gcc:13.3.0"
+  NEXUS_PASS: ${NEXUS_PASSWORD}
+
+
+
+
+
+
+build_gcc:
+  tags: 
+    - linux/x86_64/docker
+  stage: build
+  image: ${IMAGE_VAR}
+  script:
+    - apt update
+    - apt install pipx -y #закинуть в образ
+    - pipx install conan #закинуть в образ
+    - pipx ensurepath
+    - /root/.local/bin/conan build . -s build_type=${BUILD_TYPE} -c tools.build:skip_test=False -pr:a=./ci/src/conan-profile/profile-release-gcc-13-x86_64 --build="*"
+  parallel:
+    matrix:
+      - BUILD_TYPE: ['Release', 'Debug']
+        PROFILE_V: ['13.3']
+  artifacts:
+    paths:
+    - "./build/${BUILD_TYPE}/Test"
+    - "./build/${BUILD_TYPE}/Main"     
+    expire_in: 1 hour
+
+
+
+test_Release:
+  tags: 
+    - linux/x86_64/docker
+  stage: test
+  script:
+    - ./build/Release/Test/test;
+
+test_Debug:
+  tags: 
+    - linux/x86_64/docker
+  stage: test
+  script:
+    - ./build/Debug/Test/test;
+
+semantic-release:
+  tags:
+    - linux/x86_64/docker
+  image: node:22.9.0
+  stage: semantic-release
+  script:
+    - npm install --save-dev semantic-release @semantic-release/git @semantic-release/gitlab @semantic-release/exec @semantic-release/changelog @semantic-release/commit-analyzer @semantic-release/release-notes-generator 
+    - npx semantic-release
+
+
+
+deploy:
+  tags: 
+    - linux/x86_64/docker
+  stage: deploy
+  only:
+    refs:
+      # Release branch
+      - main
+  dependencies: 
+    - build_gcc
+  script:
+    - apt update
+    - apt install curl -y #закинуть в образ
+    - curl -v -u admin:$NEXUS_PASS --upload-file ./build/$BUILD_TYPE/Main/main ${NEXUS_URL}/${NEXUS_REPO}/${IMAGE_VAR}__main_${CI_COMMIT_TAG}_${BUILD_TYPE}
+  parallel:
+    matrix:
+      - BUILD_TYPE: ['Release', 'Debug']

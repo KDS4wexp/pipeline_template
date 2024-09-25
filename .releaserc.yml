@@ -1,0 +1,35 @@
+branches:
+  - name: main
+
+plugins:
+- '@semantic-release/release-notes-generator'
+- '@semantic-release/commit-analyzer' 
+- '@semantic-release/changelog'
+- '@semantic-release/exec'  
+- '@semantic-release/gitlab' 
+- name: '@semantic-release/git'
+  config:
+    assets:
+      - package.json
+      - CHANGELOG.md
+    message: "chore(release): ${nextRelease.version} [skip ci]\n\n${nextRelease.notes}"
+
+releaseRules:
+  - type: feat
+    release: minor
+  - type: fix
+    release: patch
+  - type: perf
+    release: patch
+  - type: breaking
+    release: major
+  - type: docs
+    release: false
+  - type: style
+    release: false
+  - type: refactor
+    release: false
+  - type: test
+    release: false
+  - type: chore
+    release: false

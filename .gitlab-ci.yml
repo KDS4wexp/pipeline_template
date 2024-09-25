@@ -71,6 +71,7 @@ deploy:
     - build_gcc
   script:
     - apt update
+    - apt install git -y
     - apt install curl -y #закинуть в образ
     - git fetch --tags
     - curl -v -u admin:$NEXUS_PASS --upload-file ./build/$BUILD_TYPE/Main/main ${NEXUS_URL}/${NEXUS_REPO}/${IMAGE_VAR}__main_${git describe --tags --abbrev=0}_${BUILD_TYPE}

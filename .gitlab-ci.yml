@@ -61,8 +61,18 @@ semantic-release:
     - build_gcc
   script:
     - apt update
-    - apt install curl -y
     - npm install --save-dev semantic-release @semantic-release/git @semantic-release/gitlab @semantic-release/exec @semantic-release/changelog @semantic-release/commit-analyzer @semantic-release/release-notes-generator 
     - npx semantic-release
+  artifacts:
+    reports:
+      dotenv: last_tag.env
+
+deploy:
+  tags: 
+    - linux/x86_64/docker
+  stage: deploy
+  script:
+    - source last_tag.env
+    - apt install curl -y
     - curl -v -u admin:$NEXUS_PASS --upload-file ./build/Release/Main/main ${NEXUS_URL}/${NEXUS_REPO}/${IMAGE_VAR}__main_${LAST_TAG}_${BUILD_TYPE}
     - curl -v -u admin:$NEXUS_PASS --upload-file ./build/Debug/Main/main ${NEXUS_URL}/${NEXUS_REPO}/${IMAGE_VAR}__main_${LAST_TAG}_${BUILD_TYPE}

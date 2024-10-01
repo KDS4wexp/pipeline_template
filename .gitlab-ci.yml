@@ -71,6 +71,8 @@ deploy:
   tags: 
     - linux/x86_64/docker
   stage: deploy
+  only:
+    - main
   script:
     - source last_tag.env
     - apt install curl -y

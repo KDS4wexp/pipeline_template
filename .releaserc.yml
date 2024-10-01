@@ -4,9 +4,12 @@ branches:
 plugins:
 - '@semantic-release/release-notes-generator'
 - '@semantic-release/commit-analyzer' 
-- '@semantic-release/changelog'
-- '@semantic-release/exec'  
+- '@semantic-release/changelog' 
 - '@semantic-release/gitlab' 
+- name: '@semantic-release/exec'
+  config:
+    successCmd: "echo 'New version: ${nextRelease.version}, Tag: ${nextRelease.gitTag}'"
+
 - name: '@semantic-release/git'
   config:
     assets:

@@ -64,5 +64,5 @@ semantic-release:
     - apt install curl -y
     - npm install --save-dev semantic-release @semantic-release/git @semantic-release/gitlab @semantic-release/exec @semantic-release/changelog @semantic-release/commit-analyzer @semantic-release/release-notes-generator 
     - npx semantic-release
-    - curl -v -u admin:$NEXUS_PASS --upload-file ./build/Release/Main/main ${NEXUS_URL}/${NEXUS_REPO}/${IMAGE_VAR}__main_${SEMANTIC_RELEASE_VERSION}_${BUILD_TYPE}
-    - curl -v -u admin:$NEXUS_PASS --upload-file ./build/Debug/Main/main ${NEXUS_URL}/${NEXUS_REPO}/${IMAGE_VAR}__main_${SEMANTIC_RELEASE_VERSION}_${BUILD_TYPE}
+    - curl -v -u admin:$NEXUS_PASS --upload-file ./build/Release/Main/main ${NEXUS_URL}/${NEXUS_REPO}/${IMAGE_VAR}__main_${nextRelease.gitTag}_${BUILD_TYPE}
+    - curl -v -u admin:$NEXUS_PASS --upload-file ./build/Debug/Main/main ${NEXUS_URL}/${NEXUS_REPO}/${IMAGE_VAR}__main_${nextRelease.gitTag}_${BUILD_TYPE}

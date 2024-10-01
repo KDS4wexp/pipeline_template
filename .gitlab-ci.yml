@@ -60,7 +60,6 @@ semantic-release:
   dependencies: 
     - build_gcc
   script:
-    - apt update
     - npm install --save-dev semantic-release @semantic-release/git @semantic-release/gitlab @semantic-release/exec @semantic-release/changelog @semantic-release/commit-analyzer @semantic-release/release-notes-generator 
     - npx semantic-release
   artifacts:
@@ -74,6 +73,7 @@ deploy:
   only:
     - main
   script:
+    - apt update
     - apt install curl -y
     - curl -v -u admin:$NEXUS_PASS --upload-file ./build/Release/Main/main ${NEXUS_URL}/${NEXUS_REPO}/${IMAGE_VAR}__main_${LAST_TAG}_${BUILD_TYPE}
     - curl -v -u admin:$NEXUS_PASS --upload-file ./build/Debug/Main/main ${NEXUS_URL}/${NEXUS_REPO}/${IMAGE_VAR}__main_${LAST_TAG}_${BUILD_TYPE}

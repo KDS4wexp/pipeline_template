@@ -9,7 +9,7 @@ plugins:
 - 
 
   - '@semantic-release/exec'
-  - successCmd: "echo 'LAST_TAG=${nextRelease.gitTag}'"
+  - successCmd: "echo 'LAST_TAG=${nextRelease.gitTag}' > last_tag.env"
 # - 
 
 #   - '@semantic-release/git'

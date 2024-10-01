@@ -74,7 +74,6 @@ deploy:
   only:
     - main
   script:
-    - source last_tag.env
     - apt install curl -y
     - curl -v -u admin:$NEXUS_PASS --upload-file ./build/Release/Main/main ${NEXUS_URL}/${NEXUS_REPO}/${IMAGE_VAR}__main_${LAST_TAG}_${BUILD_TYPE}
     - curl -v -u admin:$NEXUS_PASS --upload-file ./build/Debug/Main/main ${NEXUS_URL}/${NEXUS_REPO}/${IMAGE_VAR}__main_${LAST_TAG}_${BUILD_TYPE}

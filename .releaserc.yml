@@ -8,7 +8,7 @@ plugins:
 - '@semantic-release/gitlab' 
 - name: '@semantic-release/exec'
   config:
-    successCmd: "echo 'New version: ${nextRelease.version}, Tag: ${nextRelease.gitTag}'"
+    successCmd: "echo 'LAST_TAG=${nextRelease.gitTag}'"
 
 - name: '@semantic-release/git'
   config:

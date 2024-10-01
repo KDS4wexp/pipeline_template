@@ -6,16 +6,17 @@ plugins:
 - '@semantic-release/commit-analyzer' 
 - '@semantic-release/changelog' 
 - '@semantic-release/gitlab' 
-- name: '@semantic-release/exec'
-  config:
-    successCmd: "echo 'LAST_TAG=${nextRelease.gitTag}'"
+- 
 
-- name: '@semantic-release/git'
-  config:
-    assets:
+  - '@semantic-release/exec'
+  - successCmd: "echo 'LAST_TAG=${nextRelease.gitTag}'"
+- 
+
+  - '@semantic-release/git'
+  - assets:
       - package.json
       - CHANGELOG.md
-    message: "chore(release): ${nextRelease.version} [skip ci]\n\n${nextRelease.notes}"
+  - message: "chore(release): ${nextRelease.version} [skip ci]\n\n${nextRelease.notes}"
 
 releaseRules:
   - type: feat

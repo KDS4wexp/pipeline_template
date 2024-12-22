@@ -7,7 +7,7 @@ logger = logging.getLogger(__name__)
 logging.basicConfig(level=logging.DEBUG)
 
 logger.info("Installing conan")
-subprocess.run([sys.executable, 'pip', 'install', "conan"], check=True)
+subprocess.run([sys.executable, "-m", 'pip', 'install', "conan"], check=True)
 
 logger.info("Starting build")
-subprocess.run([sys.executable, 'conan', 'build .'], check=True)
+subprocess.run([sys.executable, "-m", 'conan', 'build .'], check=True)

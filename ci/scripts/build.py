@@ -13,5 +13,5 @@ build_type = ["Release", "Debug"]
 
 for type in build_type:
   logger.info("Starting build ${type}")
-  subprocess.run(['conan', 'build', ".", "-s", "build_type=${type}", "-c", "tools.build:skip_test=False", "-pr:a=./ci/src/conan-profile/profile-gcc-13-x86_64", "--build='*'"], check=True)
+  subprocess.run(['conan', 'build', ".", "-s", "build_type=${type}", "-c", "tools.build:skip_test=False", "-pr:a=./ci/src/conan-profile/profile-release-gcc-13-x86_64", "--build='*'"], check=True)
 

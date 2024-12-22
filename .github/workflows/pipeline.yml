@@ -1,0 +1,27 @@
+name: Pipeline
+on:
+  push:
+    branches:
+      - main
+      - auto/*
+
+jobs:
+  pipeline:
+    runs-on: ubuntu-24.04
+    steps:
+      - name: Pipeline
+        uses: actions/checkout@v4
+      - name: Setup Python
+        uses: actions/setup-python@v5
+        
+      - name: Run build.py
+        run: |
+          python ./ci/scripts/build.py
+
+      - name: Run test.py
+        run: |
+          python ./ci/scripts/test.py
+
+      - name: Run deploy.py
+        run: |
+          python ./ci/scripts/deploy.py

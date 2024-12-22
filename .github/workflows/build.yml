@@ -7,10 +7,12 @@ on:
 
 jobs:
   build:
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-24.04
     steps:
       - name: Build
         uses: actions/checkout@v4
+      - name: Setup Python
+        uses: actions/setup-python@v5
       - name: Run build.py
         run: |
-          ./ci/scripts/build.py
+          python ./ci/scripts/build.py

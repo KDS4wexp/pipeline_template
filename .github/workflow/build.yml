@@ -1,0 +1,16 @@
+name: Build
+on:
+  push:
+    branches:
+      - master
+      - auto/*
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Build
+        uses: actions/checkout@v4
+      - name: Run build.py
+        run: |
+          build.py

@@ -1,0 +1,17 @@
+name: Test
+on:
+  workflow_run:
+    workflows:
+      - Build
+    types:
+      - completed
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Test
+        uses: actions/checkout@v4
+      - name: Run test.py
+        run: |
+          test.py

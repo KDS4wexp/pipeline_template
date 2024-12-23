@@ -55,7 +55,8 @@ jobs:
 
         
       - name: DEBUG
-        run: echo $last_tag.env
+        run: echo $LAST_TAG
+
 
       - name: Run deploy.py
         run: |

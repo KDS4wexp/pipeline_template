@@ -39,8 +39,11 @@ jobs:
           python ./ci/scripts/test.py
 
       - name: Generate last_tag.env & CHANGELOG.md
+        env:
+          GITHUB_TOKEN: ${{ secrets.TEST_GITHUB_TOKEN}}
         run: |
           npx semantic-release
+
         
       - name: DEBUG
         run: echo $last_tag.env

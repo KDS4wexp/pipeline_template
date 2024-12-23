@@ -30,13 +30,6 @@ jobs:
                       @semantic-release/exec \
                       @semantic-release/changelog 
 
-      - name: Generate last_tag.env & CHANGELOG.md
-        run: |
-          npx semantic-release
-      
-      - name: DEBUG
-        run: echo $last_tag.env
-
       - name: Run build.py
         run: |
           python ./ci/scripts/build.py
@@ -44,6 +37,13 @@ jobs:
       - name: Run test.py
         run: |
           python ./ci/scripts/test.py
+
+      - name: Generate last_tag.env & CHANGELOG.md
+        run: |
+          npx semantic-release
+        
+      - name: DEBUG
+        run: echo $last_tag.env
 
       - name: Run deploy.py
         run: |

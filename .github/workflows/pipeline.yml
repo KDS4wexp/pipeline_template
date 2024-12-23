@@ -40,7 +40,7 @@ jobs:
 
       - name: Generate last_tag.env & CHANGELOG.md
         env:
-          GITHUB_TOKEN: ${{ secrets.TEST_GITHUB_TOKEN}}
+          GITHUB_TOKEN: ${{ secrets.TEST_GITHUB_TOKEN }}
         run: |
           npx semantic-release
 

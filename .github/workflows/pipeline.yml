@@ -26,9 +26,9 @@ jobs:
 
       - name: Install dependencies
         run: |
-          npm install
-          npm clean-install
-          npm install --save-dev semantic-release @semantic-release/exec @semantic-release/changelog 
+          npm install --save-dev semantic-release \
+                      @semantic-release/exec \
+                      @semantic-release/changelog 
 
       - name: Generate last_tag.env & CHANGELOG.md
         run: |
@@ -36,7 +36,7 @@ jobs:
       
       - name: DEBUG
         run: echo $last_tag.env
-        
+
       - name: Run build.py
         run: |
           python ./ci/scripts/build.py

@@ -12,7 +12,7 @@
     [
       "@semantic-release/exec",
       {
-        successCmd: "echo 'LAST_TAG=${nextRelease.gitTag}' > last_tag.env" # запишет LAST_TAG=v1.2.3 , если нужно просто версия => убрать LAST_TAG=
+        "successCmd": "echo 'LAST_TAG=${nextRelease.gitTag}' > last_tag.env" # запишет LAST_TAG=v1.2.3 , если нужно просто версия => убрать LAST_TAG=
       }
     ],
 

@@ -1,21 +1,6 @@
 {
 	"branches": ["main"],
 	"plugins": [
-		"@semantic-release/release-notes-generator",
-		[
-			"@semantic-release/changelog",
-			{
-				"changelogFile": "docs/CHANGELOG.md"
-			}
-		],
-		
-    [
-      "@semantic-release/exec",
-      {
-        "successCmd": "echo 'LAST_TAG=${nextRelease.gitTag}' > last_tag.env"
-      }
-    ],
-
 		[
 			"@semantic-release/commit-analyzer",
 			{
@@ -31,6 +16,22 @@
 				  { "type": "build", "release": "major" }
 				]
 			}
-		]
+		],
+
+		"@semantic-release/release-notes-generator",
+		
+		[
+			"@semantic-release/changelog",
+			{
+				"changelogFile": "docs/CHANGELOG.md"
+			}
+		],
+
+    [
+      "@semantic-release/exec",
+      {
+        "successCmd": "echo 'LAST_TAG=${nextRelease.gitTag}' > last_tag.env"
+      }
+    ]
 	]
 }

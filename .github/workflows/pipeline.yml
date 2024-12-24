@@ -59,7 +59,7 @@ jobs:
       - name: DEBUG
         run: |
           cat ./last_tag.env \
-          cat ./docs/CHANGELOG.md
+          ./docs/CHANGELOG.md
 
 
       - name: Run deploy.py

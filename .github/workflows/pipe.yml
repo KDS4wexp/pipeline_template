@@ -1,0 +1,68 @@
+name: Pipeline
+on:
+  push:
+    branches:
+      - main
+      - auto/*
+
+permissions:
+  contents: read 
+
+jobs:
+  pipeline:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write 
+      issues: write 
+      pull-requests: write 
+      id-token: write 
+
+    steps:
+
+      - name: Pipeline
+        uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+          
+      - name: Setup Python
+        uses: actions/setup-python@v5
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: "lts/*"
+
+      - name: Install dependencies
+        run: |
+          npm install --save-dev semantic-release \
+                      @semantic-release/exec \
+                      @semantic-release/changelog 
+
+      - name: export Python path
+        run: |
+          export PYTHONPATH=$(pwd)
+
+      - name: Run build.py
+        run: |
+          python ./ci/scripts/build.py
+
+      - name: Run test.py
+        run: |
+          python ./ci/scripts/test.py
+
+      - name: Generate last_tag.env & CHANGELOG.md
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          npx semantic-release
+
+        
+      - name: DEBUG
+        run: |
+          cat ./last_tag.env \
+          ./docs/CHANGELOG.md
+
+
+      - name: Run deploy.py
+        run: |
+          python ./ci/scripts/deploy.py
